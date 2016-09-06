@@ -12,29 +12,29 @@ module Emarsys
     end
 
     def x_wsse_string
+      nonce = header_nonce
       string = 'UsernameToken '
       string += 'Username="' + username + '", '
-      string += 'PasswordDigest="' + header_password_digest + '", '
-      string += 'Nonce="' + header_nonce + '", '
+      string += 'PasswordDigest="' + header_password_digest(nonce).strip + '", '
+      string += 'Nonce="' + nonce + '", '
       string += 'Created="' + header_created + '"'
       string
     end
 
-    def header_password_digest
-      Base64.encode64(calculated_digest).gsub("\n", "")
+    def header_password_digest(nonce)
+      Base64.encode64(calculated_digest(nonce)).gsub("\n", "")
     end
 
     def header_nonce
-      bytes = Random::DEFAULT.bytes(16)
-      bytes.each_byte.map { |b| sprintf("%02X",b) }.join
+      SecureRandom.hex
     end
 
     def header_created
       Time.now.utc.iso8601
     end
 
-    def calculated_digest
-      Digest::SHA1.hexdigest(header_nonce + header_created + password)
+    def calculated_digest(nonce)
+      Digest::SHA1.hexdigest(nonce + header_created + password)
     end
 
   end
