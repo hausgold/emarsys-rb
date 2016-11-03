@@ -68,6 +68,7 @@ module Emarsys
     # @param params [Hash] custom params hash
     # @return [Hash]
     def request(http_verb, method_name, params)
+      Rails.logger.info "Emarsys-Log: Verb: #{http_verb} Method: #{method_name} Params: #{params}"
       response = Emarsys::Request.new(http_verb, method_name, params).send_request
       #hashiefy(response)
     end
