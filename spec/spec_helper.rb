@@ -1,4 +1,4 @@
-require 'emarsys'
+require 'emarsys_legacy'
 require 'rspec'
 require 'webmock/rspec'
 
@@ -11,7 +11,7 @@ RSpec.configure do |config|
 end
 
 def stub_emarsys_authentication!
-  Emarsys.configure do |config|
+  EmarsysLegacy.configure do |config|
     config.api_username = "my_username"
     config.api_password = "my_password"
   end
